@@ -63,15 +63,13 @@ public class ArticleDao {
 	/**
 	 * 글수정
 	 */
-	public int updateArticle(Article article) {
-		return jdbcTemplate.update(UPDATE_ARTICLE, article.getArticleId(),
-			 article.getUserId());
+	public int updateArticle(String articleId, String memberId) {
+		return jdbcTemplate.update(UPDATE_ARTICLE, articleId, memberId);
 	}
 	/**
 	 * 글삭제
 	 */
-	public int deleteArticle(String articleId) {
-		return jdbcTemplate.update(DELETE_ARTICLE, article.ArticleId(),
-				article.UserId());
+	public int deleteArticle(String articleId, String memberId) {
+		return jdbcTemplate.update(DELETE_ARTICLE, articleId, memberId);
 	}
 }

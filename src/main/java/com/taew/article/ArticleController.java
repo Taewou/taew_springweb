@@ -76,22 +76,19 @@ public class ArticleController {
 	 * 
 	 */
 	@GetMapping("/article/modify")
-	public String articleAdd(Article article,
+	public String articleModify(Article article,
 			@SessionAttribute("MEMBER") Member member) {
-		article.setUserId(member.getMemberId());
-		article.setName(member.getName());
-		articleDao.addArticle(article);
+		
+		
 		return "redirect:/app/article/list";
 	}
 	/**
 	 * 글 삭제
 	 */
 	@GetMapping("/article/delete")
-	public String articleAdd(Article article,
+	public String articleDelete(Article article,
 			@SessionAttribute("MEMBER") Member member) {
-		article.setUserId(member.getMemberId());
-		article.setName(member.getName());
-		articleDao.addArticle(article);
+		article.setString(1 
 		return "redirect:/app/article/list";
 	}
 }
