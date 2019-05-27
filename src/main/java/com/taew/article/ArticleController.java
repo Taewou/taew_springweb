@@ -57,6 +57,11 @@ public class ArticleController {
 	 */
 	@GetMapping("/article/addForm")
 	public String articleAddForm(HttpSession session) {
+		Object memberObj = session.getAttribute("MEMBER");
+		if (memberObj == null)
+			// 세션에 MEMBER가 없을 경우 로그인 화면으로
+			return "login/loginForm";
+
 		return "article/addForm";
 	}
 
@@ -71,24 +76,51 @@ public class ArticleController {
 		articleDao.addArticle(article);
 		return "redirect:/app/article/list";
 	}
+	
 	/**
 	 * 글 수정
-	 * 
 	 */
 	@GetMapping("/article/modify")
+	public String modifyArticle(@RequestParam("articleId")
+			String articleId, Model model, HttpSession session,
+			@SessionAttribute("MEMBER") Member member) throws Exception {
+			Article article = articleDao.getArticle(articleId);
+			Object memberObj = session.getAttribute("MEMBER");
+			if (memberObj == null)
+				// 세션에 MEMBER가 없을 경우 로그인 화면으로
+				return "login/loginForm";
+				// 사용자 아이디가 다른경우 실패 화면
+			if(!member.getMemberId().equals(article.getUserId()))
+				return "article/modifyFailed";
+				// 수정 성공
+			model.addAttribute("article",article);
+			return "article/modify";
+	}
+	
+	@PostMapping("/article/modify")
 	public String articleModify(Article article,
 			@SessionAttribute("MEMBER") Member member) {
-		
-		
-		return "redirect:/app/article/list";
+			articleDao.modifyArticle(article);
+			return "redirect:/app/article/list";
 	}
+	
 	/**
 	 * 글 삭제
 	 */
 	@GetMapping("/article/delete")
-	public String articleDelete(Article article,
-			@SessionAttribute("MEMBER") Member member) {
-		article.setString(1 
-		return "redirect:/app/article/list";
+	public String deleteArticle(@RequestParam("articleId")
+			String articleId, Model model, HttpSession session,
+			@SessionAttribute("MEMBER") Member member) throws Exception {
+			Article article = articleDao.getArticle(articleId);
+			Object memberObj = session.getAttribute("MEMBER");
+			if (memberObj == null)
+				// 세션에 MEMBER가 없을 경우 로그인 화면으로
+				return "login/loginForm";
+				// 사용자 아이디가 다른경우 실패 화면
+			if(!member.getMemberId().equals(article.getUserId()))
+				return "article/deleteFailed";
+				// 삭제 성공
+			articleDao.deleteArticle(article);
+			return "article/delete";
 	}
 }

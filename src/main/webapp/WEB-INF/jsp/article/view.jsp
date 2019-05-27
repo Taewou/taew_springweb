@@ -11,6 +11,10 @@
 	<p>
 		<a href="./app/article/list">글 목록</a>
 	</p>
+	<p>
+		<a href="./app/article/modify?articleId=${article.articleId}">글수정</a>
+		<a href="./app/article/delete?articleId=${article.articleId}">글삭제</a>
+	</p>
 	<hr />
 	<p>
 		<span>${article.articleId }</span> | <span style="font-weight: bold;">${article.title }</span>

@@ -19,11 +19,10 @@ public class ArticleDao {
 
 	static final String ADD_ARTICLE = "insert article(title,content,userId,name) values(?,?,?,?)";
 	
-	static final String UPDATE_ARTICLE = "UPDATE article SET title=?, content=? WHERE (articleId, userID)=(?,?)";
-
-	static final String DELETE_ARTICLE = "DELETE FROM article WHERE (articleId,uesrID)=(?,?)";
-
-
+	static final String MODIFY_ARTICLE = "UPDATE article SET title=?, content=? WHERE articleId=?";
+	
+	static final String DELETE_ARTICLE = "DELETE FROM article WHERE articleId=?";
+	
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
@@ -60,16 +59,19 @@ public class ArticleDao {
 		return jdbcTemplate.update(ADD_ARTICLE, article.getTitle(),
 				article.getContent(), article.getUserId(), article.getName());
 	}
+	
 	/**
 	 * 글수정
 	 */
-	public int updateArticle(String articleId, String memberId) {
-		return jdbcTemplate.update(UPDATE_ARTICLE, articleId, memberId);
+	public void modifyArticle(Article article) {
+		jdbcTemplate.update(MODIFY_ARTICLE, article.getTitle(),
+				article.getContent(),article.getArticleId());
 	}
+	
 	/**
 	 * 글삭제
 	 */
-	public int deleteArticle(String articleId, String memberId) {
-		return jdbcTemplate.update(DELETE_ARTICLE, articleId, memberId);
+	public void deleteArticle(Article article) {
+		jdbcTemplate.update(DELETE_ARTICLE, article.getArticleId());
 	}
 }

@@ -3,10 +3,10 @@
 <html>
 <head>
 <base href="${pageContext.request.contextPath }/" />
-<title>삭제</title>
+<title>삭제 실패</title>
 </head>
 <body>
-<h1>해당 글은 삭제되었습니다.</h1>
+<h1>권한없음</h1>
 	<p>
 		<a href="./">메인으로 가기</a>
 	</p>
@@ -15,4 +15,3 @@
 	</p>
 </body>
 <body>
-
