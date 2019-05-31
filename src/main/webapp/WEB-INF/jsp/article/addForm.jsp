@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-<base href="${pageContext.request.contextPath }/" />
+<base href="${pageContext.request.contextPath}/" />
 <title>게시판</title>
 </head>
 <body>

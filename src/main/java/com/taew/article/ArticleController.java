@@ -22,7 +22,7 @@ public class ArticleController {
 	@Autowired
 	ArticleDao articleDao;
 
-	Logger logger = LogManager.getLogger();
+	static final Logger logger = LogManager.getLogger();
 
 	/**
 	 * 글 목록
@@ -57,11 +57,6 @@ public class ArticleController {
 	 */
 	@GetMapping("/article/addForm")
 	public String articleAddForm(HttpSession session) {
-		Object memberObj = session.getAttribute("MEMBER");
-		if (memberObj == null)
-			// 세션에 MEMBER가 없을 경우 로그인 화면으로
-			return "login/loginForm";
-
 		return "article/addForm";
 	}
 
@@ -76,51 +71,55 @@ public class ArticleController {
 		articleDao.addArticle(article);
 		return "redirect:/app/article/list";
 	}
-	
+
+	/**
+	 * 글 수정 화면
+	 */
+	@GetMapping("/article/updateForm")
+	public void updateForm(@RequestParam("articleId") String articleId,
+			@SessionAttribute("MEMBER") Member member, Model model) {
+			Article article = articleDao.getArticle(articleId);
+
+		// 권한 체크 : 세션의 memberId와 글의 userId를 비교
+		if (!member.getMemberId().equals(article.getUserId()))
+			// 자신의 글이 아니면
+			throw new RuntimeException("No Authority!");
+
+		model.addAttribute("article", article);
+	}
+
 	/**
 	 * 글 수정
 	 */
-	@GetMapping("/article/modify")
-	public String modifyArticle(@RequestParam("articleId")
-			String articleId, Model model, HttpSession session,
-			@SessionAttribute("MEMBER") Member member) throws Exception {
-			Article article = articleDao.getArticle(articleId);
-			Object memberObj = session.getAttribute("MEMBER");
-			if (memberObj == null)
-				// 세션에 MEMBER가 없을 경우 로그인 화면으로
-				return "login/loginForm";
-				// 사용자 아이디가 다른경우 실패 화면
-			if(!member.getMemberId().equals(article.getUserId()))
-				return "article/modifyFailed";
-				// 수정 성공
-			model.addAttribute("article",article);
-			return "article/modify";
-	}
-	
-	@PostMapping("/article/modify")
-	public String articleModify(Article article,
+	@PostMapping("/article/update")
+	public String update(Article article,
 			@SessionAttribute("MEMBER") Member member) {
-			articleDao.modifyArticle(article);
-			return "redirect:/app/article/list";
+		article.setUserId(member.getMemberId());
+		int updatedRows = articleDao.updateArticle(article);
+
+		// 권한 체크 : 글이 수정되었는지 확인
+		if (updatedRows == 0)
+			// 글이 수정되지 않음. 자신이 쓴 글이 아님
+			throw new RuntimeException("No Authority!");
+
+		return "redirect:/app/article/view?articleId=" + article.getArticleId();
 	}
-	
+
 	/**
 	 * 글 삭제
 	 */
 	@GetMapping("/article/delete")
-	public String deleteArticle(@RequestParam("articleId")
-			String articleId, Model model, HttpSession session,
-			@SessionAttribute("MEMBER") Member member) throws Exception {
-			Article article = articleDao.getArticle(articleId);
-			Object memberObj = session.getAttribute("MEMBER");
-			if (memberObj == null)
-				// 세션에 MEMBER가 없을 경우 로그인 화면으로
-				return "login/loginForm";
-				// 사용자 아이디가 다른경우 실패 화면
-			if(!member.getMemberId().equals(article.getUserId()))
-				return "article/deleteFailed";
-				// 삭제 성공
-			articleDao.deleteArticle(article);
-			return "article/delete";
+	public String delete(@RequestParam("articleId") String articleId,
+			@SessionAttribute("MEMBER") Member member) {
+		int updatedRows = articleDao.deleteArticle(articleId,
+				member.getMemberId());
+
+		// 권한 체크 : 글이 삭제되었는지 확인
+		if (updatedRows == 0)
+			// 글이 삭제되지 않음. 자신이 쓴 글이 아님
+			throw new RuntimeException("No Authority!");
+
+		logger.debug("글을 삭제했습니다. articleId={}", articleId);
+		return "redirect:/app/article/list";
 	}
 }
