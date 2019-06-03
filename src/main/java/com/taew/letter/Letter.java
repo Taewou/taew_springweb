@@ -75,6 +75,15 @@ public class Letter {
 		this.cdate = cdate;
 	}
 
+	/**
+	 * \n를 <br/> 로 바꾼다.
+	 */
+	public String getContentHtml() {
+		if (content != null)
+			return content.replace("\n", "<br/>");
+		return null;
+	}
+	
 	@Override
 	public String toString() {
 		return "Letter [letterId=" + letterId + ", title=" + title
