@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class LetterDao {
-	
+
 	static final String LIST_LETTERS_RECEIVED = "select letterId,title,senderId,senderName,left(cdate,19) cdate from letter where receiverId=? order by letterId desc limit ?,?";
 	static final String LIST_LETTERS_SENT = "select letterId,title,receiverId,receiverName,left(cdate,19) cdate from letter where senderId=? order by letterId desc limit ?,?";
 
@@ -85,4 +85,5 @@ public class LetterDao {
 	public int deleteLetter(String letterId, String memberId) {
 		return jdbcTemplate.update(DELETE_LETTER, letterId, memberId, memberId);
 	}
+
 }

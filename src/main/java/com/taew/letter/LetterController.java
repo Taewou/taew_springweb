@@ -14,7 +14,7 @@ import com.taew.jdbc.chap11.Member;
 
 @Controller
 public class LetterController {
-	
+
 	@Autowired
 	LetterDao letterDao;
 
@@ -32,7 +32,7 @@ public class LetterController {
 
 		List<Letter> letters = letterDao.listLettersReceived(
 				member.getMemberId(), offset, ROWS_PER_PAGE);
-		int count = letterDao.countLettersReceived(member.getEmail());
+		int count = letterDao.countLettersReceived(member.getMemberId());
 
 		model.addAttribute("letters", letters);
 		model.addAttribute("count", count);
@@ -52,7 +52,7 @@ public class LetterController {
 
 		List<Letter> letters = letterDao.listLettersSent(member.getMemberId(),
 				offset, ROWS_PER_PAGE);
-		int count = letterDao.countLettersSent(member.getEmail());
+		int count = letterDao.countLettersSent(member.getMemberId());
 
 		model.addAttribute("letters", letters);
 		model.addAttribute("count", count);

@@ -1,5 +1,9 @@
 package com.taew.letter;
 
+/**
+ * @author jacob
+ *
+ */
 public class Letter {
 
 	String letterId;
@@ -91,4 +95,5 @@ public class Letter {
 				+ ", senderName=" + senderName + ", receiverId=" + receiverId
 				+ ", receiverName=" + receiverName + ", cdate=" + cdate + "]";
 	}
+
 }
